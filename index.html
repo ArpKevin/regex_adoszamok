@@ -4,12 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .error {
+            color: red;
+        }
+        .valid {
+            color: black;
+        }
+    </style>
 </head>
+<script>
+let regex_hu = /^[0-9]{8}-[1-5]-[0-9]{2}$/;
+let regex_eu = /^[A-Z]{2,3}[0-9]{7,}$/;
+let regex_phone = /^\+?[0-9]{10,15}$/;
+let regex_email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validateInput(input, regex) {
+    if (regex.test(input.value)) {
+        input.classList.remove('error');
+        input.classList.add('valid');
+    } else {
+        input.classList.remove('valid');
+        input.classList.add('error');
+    }
+}
+
+function restrictHuInput(input) {
+    input.value = input.value.replace(/[^0-9\-]/g, '');
+    validateInput(input, regex_hu);
+}
+
+function restrictEuInput(input) {
+    input.value = input.value.replace(/[^A-Z0-9]/g, '');
+    validateInput(input, regex_eu);
+}
+
+
+function restrictPhoneInput(input) {
+    input.value = input.value.replace(/[^0-9\+]/g, '');
+    validateInput(input, regex_phone);
+}
+
+function restrictEmailInput(input) {
+    validateInput(input, regex_email);
+}
+</script>
 <body>
-    <fieldset>
+    <fieldset style="width: 500px;">
         <legend>Adószámok</legend>
-        HU<input type="text" name="" id="">
-        EU<input type="text" name="" id="">
+        HU <input type="text" oninput="restrictHuInput(this)" placeholder="12345678-1-12"> fix 13 (12345678-1-12)<br>
+        EU <input type="text" oninput="restrictEuInput(this)" placeholder="HU12345678"> fix 10 (HU12345678)<br>
+        Telefon <input type="text" oninput="restrictPhoneInput(this)" placeholder="+36301234567"> min 10 (+36301234567)<br>
+        Email <input type="text" oninput="restrictEmailInput(this)" placeholder="example@mail.com"> (example@mail.com)<br>
     </fieldset>
 </body>
 </html>
